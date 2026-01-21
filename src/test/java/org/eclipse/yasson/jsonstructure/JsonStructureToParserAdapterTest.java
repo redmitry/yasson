@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -23,6 +24,7 @@ import jakarta.json.JsonArray;
 import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonObjectBuilder;
+import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.json.bind.JsonbConfig;
 import jakarta.json.spi.JsonProvider;
@@ -270,4 +272,35 @@ public class JsonStructureToParserAdapterTest {
         assertEquals("String value 1", result.getInner().getInnerFirst());
         assertEquals("String value 2", result.getInner().getInnerSecond());
     }
+    
+    @Test
+    public void testGetValue() {
+        final String json = 
+        """
+        {
+            "type": "Location",
+            "reference": "dummy reference"
+        }
+        """;
+        
+        Jsonb jsonb = JsonbBuilder.create(
+                new JsonbConfig().withDeserializers(new Issue673.ReferenceableDeserializer()));
+        jsonb.fromJson(json, Issue673.LocationInterface.class);
+    }
+    
+    @Test
+    public void testGetArray() {
+        final String json = 
+        """
+        {
+            "type": "Location",
+            "tags": ["test1", "test2"]
+        }
+        """;
+        
+        Jsonb jsonb = JsonbBuilder.create(
+                new JsonbConfig().withDeserializers(new Issue673.ReferenceableDeserializer()));
+        jsonb.fromJson(json, Issue673.LocationInterface.class);
+    }
+
 }
