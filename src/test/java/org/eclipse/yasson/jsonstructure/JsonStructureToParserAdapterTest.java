@@ -283,9 +283,20 @@ public class JsonStructureToParserAdapterTest {
         }
         """;
         
-        Jsonb jsonb = JsonbBuilder.create(
-                new JsonbConfig().withDeserializers(new Issue673.ReferenceableDeserializer()));
-        jsonb.fromJson(json, Issue673.LocationInterface.class);
+        Jsonb jsonb = JsonbBuilder.create();
+        Issue673.LocationInterface result = jsonb.fromJson(json, Issue673.LocationInterface.class);
+	        
+        assertNotNull(result);
+        assertTrue(result instanceof Issue673.Location);
+        Issue673.Location location = (Issue673.Location) result;
+
+        Issue673.Referenceable refAble = location.getReference();
+        assertNotNull(refAble);
+        assertFalse(refAble instanceof Issue673.Reference);
+        assertTrue(refAble instanceof Issue673.IRIReference);
+        Issue673.IRIReference ref = (Issue673.IRIReference) refAble;
+
+        assertEquals("dummy reference", ref.getValue());
     }
     
     @Test
@@ -298,9 +309,17 @@ public class JsonStructureToParserAdapterTest {
         }
         """;
         
-        Jsonb jsonb = JsonbBuilder.create(
-                new JsonbConfig().withDeserializers(new Issue673.ReferenceableDeserializer()));
-        jsonb.fromJson(json, Issue673.LocationInterface.class);
+        Jsonb jsonb = JsonbBuilder.create();
+        Issue673.LocationInterface result = jsonb.fromJson(json, Issue673.LocationInterface.class);
+        
+        assertNotNull(result);
+        assertTrue(result instanceof Issue673.Location);
+        Issue673.Location location = (Issue673.Location) result;
+        
+        String tags = location.getTags();
+        assertNotNull(tags);
+
+        assertEquals("test1, test2", tags);
     }
 
 }

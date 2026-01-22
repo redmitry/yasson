@@ -124,7 +124,7 @@ public class Issue673 {
                 return new IRIReference(str.getString());
             }
             if (v instanceof JsonObject obj) {
-                dc.deserialize(Reference.class, 
+                return dc.deserialize(Reference.class,
                         Json.createParserFactory(Collections.EMPTY_MAP)
                                 .createParser(obj));
             }
